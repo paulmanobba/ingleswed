@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Difícil: Adivina la Ciudad</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #eaf2f8;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        .incorrect {
+            background-color: #fadbd8;
+            color: #e74c3c;
+        }
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+        .city-info {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        .options {
+            margin: 10px 0;
+        }
+        .option {
+            margin: 5px 0;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+        .option.selected {
+            background-color: #3498db;
+            color: white;
+        }
+        .next-btn {
+            display: none;
+            background-color: #2ecc71;
+        }
+        .next-btn:hover {
+            background-color: #27ae60;
+        }
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #e74c3c;
+        }
+        .difficulty {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Juego Difícil: Adivina la Ciudad</h1>
+        <div class="difficulty">Nivel: Experto - ¡Solo para verdaderos conocedores!</div>
+        <div class="timer">Tiempo: <span id="time">30</span>s</div>
+        <div class="score">Puntuación: <span id="score">0</span>/6</div>
+        
+        <div class="question" id="question1">
+            <h3>1. ¿En qué ciudad se celebra un desfile en noviembre que marca el inicio de la temporada navideña y donde el accesorio típico está relacionado con el deporte más popular del país?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(1, 0)">París, Francia</div>
+                <div class="option" onclick="selectOption(1, 1)">Manhattan, Nueva York</div>
+                <div class="option" onclick="selectOption(1, 2)">Medellín, Colombia</div>
+                <div class="option" onclick="selectOption(1, 3)">Moscú, Rusia</div>
+            </div>
+            <button onclick="checkAnswer(1)">Comprobar</button>
+            <button class="next-btn" onclick="nextQuestion(1)">Siguiente pregunta</button>
+            <div class="feedback" id="feedback1"></div>
+            <div class="city-info" id="info1">
+                <p><strong>Manhattan, Nueva York:</strong> El desfile de Acción de Gracias de Macy's (noviembre) marca el inicio de la temporada navideña. La gorra de béisbol es el accesorio típico, relacionado con el deporte nacional de EE.UU.</p>
+            </div>
+        </div>
+        
+        <div class="question" id="question2" style="display:none;">
+            <h3>2. ¿En qué archipiélago encontrarías dos estaciones climáticas marcadas por corrientes oceánicas, donde el accesorio más necesario incluye protección UV?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(2, 0)">Islas Canarias, España</div>
+                <div class="option" onclick="selectOption(2, 1)">Islas Galápagos, Ecuador</div>
+                <div class="option" onclick="selectOption(2, 2)">Islas Maldivas</div>
+                <div class="option" onclick="selectOption(2, 3)">Islas Hawaii, EE.UU.</div>
+            </div>
+            <button onclick="checkAnswer(2)">Comprobar</button>
+            <button class="next-btn" onclick="nextQuestion(2)">Siguiente pregunta</button>
+            <div class="feedback" id="feedback2"></div>
+            <div class="city-info" id="info2">
+                <p><strong>Islas Galápagos, Ecuador:</strong> Tienen dos estaciones marcadas por las corrientes de Humboldt (fría) y Panamá (cálida). La fuerte radiación UV hace esencial sombreros y gafas de sol.</p>
+            </div>
+        </div>
+        
+        <div class="question" id="question3" style="display:none;">
+            <h3>3. ¿En qué destino turístico con ruinas antiguas el clima divide el año en "temporada de huracanes" y "temporada seca", siendo el sombrero de fibra natural su accesorio característico?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(3, 0)">Cancún, México</div>
+                <div class="option" onclick="selectOption(3, 1)">Bali, Indonesia</div>
+                <div class="option" onclick="selectOption(3, 2)">Atenas, Grecia</div>
+                <div class="option" onclick="selectOption(3, 3)">Sharm el-Sheij, Egipto</div>
+            </div>
+            <button onclick="checkAnswer(3)">Comprobar</button>
+            <button class="next-btn" onclick="nextQuestion(3)">Siguiente pregunta</button>
+            <div class="feedback" id="feedback3"></div>
+            <div class="city-info" id="info3">
+                <p><strong>Cancún, México:</strong> En la zona maya, la temporada de huracanes va de mayo a octubre. El sombrero de palma (fibra natural) es típico para protegerse del intenso sol caribeño.</p>
+            </div>
+        </div>
+        
+        <div class="question" id="question4" style="display:none;">
+            <h3>4. ¿Qué ciudad conocida como "la de la eterna primavera" celebra un festival floral donde los campesinos exhiben arreglos en estructuras de madera, y cuyo accesorio típico incluye un bolso de cuero?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(4, 0)">Quito, Ecuador</div>
+                <div class="option" onclick="selectOption(4, 1)">Medellín, Colombia</div>
+                <div class="option" onclick="selectOption(4, 2)">Niza, Francia</div>
+                <div class="option" onclick="selectOption(4, 3)">Cuzco, Perú</div>
+            </div>
+            <button onclick="checkAnswer(4)">Comprobar</button>
+            <button class="next-btn" onclick="nextQuestion(4)">Siguiente pregunta</button>
+            <div class="feedback" id="feedback4"></div>
+            <div class="city-info" id="info4">
+                <p><strong>Medellín, Colombia:</strong> Llamada "Ciudad de la eterna primavera" por su clima. En la Feria de las Flores, los silleteros cargan arreglos florales en silletas (estructuras de madera). El carriel es el bolso de cuero típico.</p>
+            </div>
+        </div>
+        
+        <div class="question" id="question5" style="display:none;">
+            <h3>5. ¿En qué capital europea el 14 de julio se conmemora la toma de una prisión con desfiles militares, siendo su accesorio típico un elemento que usaban los artistas bohemios del siglo XIX?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(5, 0)">Roma, Italia</div>
+                <div class="option" onclick="selectOption(5, 1)">Berlín, Alemania</div>
+                <div class="option" onclick="selectOption(5, 2)">París, Francia</div>
+                <div class="option" onclick="selectOption(5, 3)">Viena, Austria</div>
+            </div>
+            <button onclick="checkAnswer(5)">Comprobar</button>
+            <button class="next-btn" onclick="nextQuestion(5)">Siguiente pregunta</button>
+            <div class="feedback" id="feedback5"></div>
+            <div class="city-info" id="info5">
+                <p><strong>París, Francia:</strong> El 14 de julio conmemora la Toma de la Bastilla (prisión) en 1789. La boina, accesorio típico, era usada por artistas como Picasso y Van Gogh.</p>
+            </div>
+        </div>
+        
+        <div class="question" id="question6" style="display:none;">
+            <h3>6. ¿En qué ciudad donde el termómetro puede bajar hasta -25°C en enero, se celebra en mayo una victoria sobre el ejército alemán, y cuyo accesorio invernal tiene orejeras?</h3>
+            <div class="options">
+                <div class="option" onclick="selectOption(6, 0)">Helsinki, Finlandia</div>
+                <div class="option" onclick="selectOption(6, 1)">Moscú, Rusia</div>
+                <div class="option" onclick="selectOption(6, 2)">Ottawa, Canadá</div>
+                <div class="option" onclick="selectOption(6, 3)">Estocolmo, Suecia</div>
+            </div>
+            <button onclick="checkAnswer(6)">Comprobar</button>
+            <div class="feedback" id="feedback6"></div>
+            <div class="city-info" id="info6">
+                <p><strong>Moscú, Rusia:</strong> Con inviernos extremos (-25°C). El 9 de mayo celebra la Victoria sobre la Alemania nazi en 1945. El ushanka (gorro con orejeras) es esencial para el frío.</p>
+            </div>
+        </div>
+        
+        <div id="results" style="display:none; text-align:center; margin-top:20px;">
+            <h2>¡Juego completado!</h2>
+            <p>Tu puntuación final es: <span id="final-score">0</span>/6</p>
+            <div id="performance-comment"></div>
+            <button onclick="resetGame()">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentQuestion = 1;
+        let timeLeft = 30;
+        let timer;
+        const correctAnswers = [1, 1, 0, 1, 2, 1]; // Índices de las respuestas correctas (0-based)
+        const selectedOptions = [null, null, null, null, null, null, null];
+        
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            document.getElementById("time").textContent = timeLeft;
+            
+            timer = setInterval(function() {
+                timeLeft--;
+                document.getElementById("time").textContent = timeLeft;
+                
+                if(timeLeft <= 0) {
+                    clearInterval(timer);
+                    checkAnswer(currentQuestion);
+                    document.querySelector(`#question${currentQuestion} button`).style.display = "none";
+                    document.getElementById(`feedback${currentQuestion}`).textContent = "¡Tiempo agotado!";
+                    document.getElementById(`feedback${currentQuestion}`).className = "feedback incorrect";
+                    document.getElementById(`feedback${currentQuestion}`).style.display = "block";
+                    document.getElementById(`info${currentQuestion}`).style.display = "block";
+                    
+                    if(currentQuestion < 6) {
+                        document.querySelector(`#question${currentQuestion} .next-btn`).style.display = "inline-block";
+                    } else {
+                        showResults();
+                    }
+                }
+            }, 1000);
+        }
+        
+        function selectOption(questionNum, optionIndex) {
+            const options = document.querySelectorAll(`#question${questionNum} .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            selectedOptions[questionNum] = optionIndex;
+        }
+        
+        function checkAnswer(questionNum) {
+            clearInterval(timer);
+            
+            if (selectedOptions[questionNum] === null) {
+                alert("¡El tiempo ha pasado! Selecciona una opción más rápido");
+                return;
+            }
+            
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const cityInfo = document.getElementById(`info${questionNum}`);
+            const checkBtn = document.querySelector(`#question${questionNum} button`);
+            const nextBtn = document.querySelector(`#question${questionNum} .next-btn`);
+            
+            if (selectedOptions[questionNum] === correctAnswers[questionNum-1]) {
+                feedback.textContent = "¡Correcto! +1 punto";
+                feedback.className = "feedback correct";
+                score++;
+                document.getElementById("score").textContent = score;
+            } else {
+                feedback.textContent = `Incorrecto. La respuesta correcta era: ${document.querySelectorAll(`#question${questionNum} .option`)[correctAnswers[questionNum-1]].textContent}`;
+                feedback.className = "feedback incorrect";
+            }
+            
+            feedback.style.display = "block";
+            cityInfo.style.display = "block";
+            checkBtn.style.display = "none";
+            
+            if (questionNum < 6) {
+                nextBtn.style.display = "inline-block";
+            } else {
+                showResults();
+            }
+        }
+        
+        function nextQuestion(currentQ) {
+            document.getElementById(`question${currentQ}`).style.display = "none";
+            document.getElementById(`question${currentQ+1}`).style.display = "block";
+            currentQuestion = currentQ+1;
+            startTimer();
+        }
+        
+        function showResults() {
+            document.getElementById("final-score").textContent = score;
+            const comment = document.getElementById("performance-comment");
+            
+            if(score === 6) {
+                comment.innerHTML = "<p>¡Perfecto! Eres un verdadero experto en culturas urbanas.</p>";
+            } else if(score >= 4) {
+                comment.innerHTML = "<p>¡Muy bien! Tienes un conocimiento impresionante.</p>";
+            } else if(score >= 2) {
+                comment.innerHTML = "<p>Buen intento. Sigue aprendiendo sobre diferentes culturas.</p>";
+            } else {
+                comment.innerHTML = "<p>Un resultado modesto. ¿Quizás quieras investigar más sobre estas ciudades?</p>";
+            }
+            
+            document.getElementById("results").style.display = "block";
+        }
+        
+        function resetGame() {
+            score = 0;
+            currentQuestion = 1;
+            selectedOptions.fill(null);
+            document.getElementById("score").textContent = "0";
+            document.getElementById("results").style.display = "none";
+            
+            for (let i = 1; i <= 6; i++) {
+                const question = document.getElementById(`question${i}`);
+                question.style.display = i === 1 ? "block" : "none";
+                document.getElementById(`feedback${i}`).style.display = "none";
+                document.getElementById(`info${i}`).style.display = "none";
+                document.querySelector(`#question${i} button`).style.display = "inline-block";
+                document.querySelector(`#question${i} .next-btn`).style.display = "none";
+                
+                const options = document.querySelectorAll(`#question${i} .option`);
+                options.forEach(opt => opt.classList.remove('selected'));
+            }
+            
+            startTimer();
+        }
+        
+        // Iniciar el juego
+        startTimer();
+    </script>
+</body>
+</html>
